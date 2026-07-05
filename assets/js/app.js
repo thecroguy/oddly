@@ -71,7 +71,7 @@
 
   function render() {
     const list = visible();
-    feed.innerHTML = list.map((p) => cardHTML(p, ODDLY_PRODUCTS.indexOf(p))).join("");
+    feed.innerHTML = list.map((p) => cardHTML(p, productsData.indexOf(p))).join("");
     countEl.textContent =
       list.length + (list.length === 1 ? " strange thing" : " strange things");
     emptyEl.classList.toggle("show", list.length === 0);
@@ -136,7 +136,7 @@
   feed.addEventListener("click", (e) => {
     const card = e.target.closest(".card");
     if (!card) return;
-    openProduct(ODDLY_PRODUCTS[+card.dataset.i]);
+    openProduct(productsData[+card.dataset.i]);
   });
   modal.addEventListener("click", (e) => {
     if (e.target.dataset.close !== undefined || e.target.classList.contains("modal__scrim"))
