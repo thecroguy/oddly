@@ -89,10 +89,19 @@
       if (!res.ok) throw new Error("fetch failed");
       const html = await res.text();
       const title = extractMeta(html, ["og:title", "twitter:title"]) || extractTitle(html);
-      const image = extractMeta(html, ["og:image", "twitter:image"]) || "";
+      let image = extractMeta(html, ["og:image", "twitter:image"]) || "";
       const blurb = extractMeta(html, ["description", "og:description", "twitter:description"]) || "";
       const price = extractPrice(html);
       const host = new URL(url).hostname.replace(/^www\./, "");
+      // Normalize image URL to an absolute, secure URL if possible
+      try {
+        if (image && image.startsWith("//")) image = "https:" + image;
+        else if (image && image.startsWith("/")) image = new URL(image, url).href;
+        else if (image && !/^https?:\/\//i.test(image)) image = new URL(image, url).href;
+      } catch (err) {
+        // leave image as-is if URL resolution fails
+      }
+
       return {
         ...product,
         name: product.name || title || humanizeSlug(url),
@@ -118,9 +127,12 @@
   };
 
   /* ---------- build category dropdown + swatches ---------- */
-  catSelect.innerHTML = ODDLY_CATEGORIES.filter((c) => c !== "All")
-    .map((c) => `<option value="${c}">${c}</option>`)
-    .join("");
+  // Add an explicit empty option so new imports don't default to the first
+  // real category (previously 'Desk'). Users can choose a category manually.
+  catSelect.innerHTML = '<option value="">Uncategorized</option>' +
+    ODDLY_CATEGORIES.filter((c) => c !== "All")
+      .map((c) => `<option value="${c}">${c}</option>`)
+      .join("");
 
   function renderSwatches() {
     swatchesEl.innerHTML =
@@ -168,7 +180,7 @@
     form.name.value = p.name || "";
     form.blurb.value = p.blurb || "";
     form.price.value = p.price != null ? p.price : "";
-    form.cat.value = p.cat || ODDLY_CATEGORIES[1];
+    form.cat.value = p.cat || "";
     form.emoji.value = p.emoji || "";
     form.store.value = p.store || "";
     form.image.value = p.image || "";
