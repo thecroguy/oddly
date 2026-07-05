@@ -43,11 +43,75 @@
 
   const money = (n) => "$" + Number(n || 0).toFixed(2).replace(/\.00$/, "");
   const esc = (s) =>
-    String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));  const cleanUrl = (value) => {
+    String(s == null ? "" : s).replace(/[&<>\"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const cleanUrl = (value) => {
     const v = String(value || "").trim();
     if (!v) return "";
     return /^https?:\/\//i.test(v) ? v : `https://${v}`;
-  };  const tint = (hex) => {
+  };
+  const decodeHtml = (value) =>
+    String(value || "")
+      .replace(/&amp;/g, "&")
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">");
+  const humanizeSlug = (url) => {
+    try {
+      const path = new URL(url).pathname.replace(/\/+$/, "").split("/").filter(Boolean).pop() || "Product";
+      return decodeURIComponent(path).replace(/[-_]+/g, " ").replace(/\b\w/g, (m) => m.toUpperCase());
+    } catch (e) {
+      return "Product";
+    }
+  };
+  const extractMeta = (html, names) => {
+    for (const name of names) {
+      const m = html.match(new RegExp(`<meta[^>]+(?:property|name)=["']${name}["'][^>]+content=["']([^"']+)["']`, "i"));
+      if (m) return decodeHtml(m[1].trim());
+    }
+    return "";
+  };
+  const extractTitle = (html) => {
+    const m = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+    return m ? decodeHtml(m[1].trim()) : "";
+  };
+  const extractPrice = (html) => {
+    const m = html.match(/\$(\d+(?:\.\d{1,2})?)/);
+    return m ? Number(m[1]) : 0;
+  };
+  async function importProductFromUrl(product) {
+    const url = product.url && product.url !== "#" ? cleanUrl(product.url) : "";
+    if (!url) return product;
+    const proxyUrl = `https://r.jina.ai/http://${url.replace(/^https?:\/\//i, "")}`;
+    try {
+      const res = await fetch(proxyUrl, { headers: { Accept: "text/html,application/xhtml+xml" } });
+      if (!res.ok) throw new Error("fetch failed");
+      const html = await res.text();
+      const title = extractMeta(html, ["og:title", "twitter:title"]) || extractTitle(html);
+      const image = extractMeta(html, ["og:image", "twitter:image"]) || "";
+      const blurb = extractMeta(html, ["description", "og:description", "twitter:description"]) || "";
+      const price = extractPrice(html);
+      const host = new URL(url).hostname.replace(/^www\./, "");
+      return {
+        ...product,
+        name: product.name || title || humanizeSlug(url),
+        blurb: product.blurb || blurb.replace(/\s+/g, " ").slice(0, 140),
+        price: product.price || price || 0,
+        store: product.store || host,
+        image: product.image || image || undefined,
+        url,
+      };
+    } catch (e) {
+      const host = (() => { try { return new URL(url).hostname.replace(/^www\./, ""); } catch (error) { return "Store"; } })();
+      return {
+        ...product,
+        name: product.name || humanizeSlug(url),
+        store: product.store || host,
+        url,
+      };
+    }
+  }
+  const tint = (hex) => {
     const h = hex.replace("#", "");
     return `rgba(${parseInt(h.slice(0, 2), 16)},${parseInt(h.slice(2, 4), 16)},${parseInt(h.slice(4, 6), 16)},0.14)`;
   };
@@ -208,9 +272,15 @@
   cancelBtn.addEventListener("click", resetForm);
   newBtn.addEventListener("click", resetForm);
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const p = formData();
+    const base = formData();
+    if (!base.name && !base.url) {
+      toast("Add a name or paste a product link");
+      return;
+    }
+    toast(base.url && base.url !== "#" ? "Fetching product details…" : "Saving product…");
+    const p = await importProductFromUrl(base);
     if (!p.name) {
       toast("Name is required");
       return;
