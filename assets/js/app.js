@@ -13,6 +13,15 @@
   let activeCat = "All";
   let query = "";
 
+  function loadProducts() {
+    try {
+      const saved = localStorage.getItem("oddly_products_v1");
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return ODDLY_PRODUCTS;
+  }
+  const productsData = loadProducts();
+
   /* ---------- helpers ---------- */
   const money = (n) => "$" + Number(n).toFixed(2).replace(/\.00$/, "");
   const tint = (hex) => {
@@ -27,7 +36,7 @@
   /* ---------- filtering ---------- */
   function visible() {
     const q = query.trim().toLowerCase();
-    return ODDLY_PRODUCTS.filter((p) => {
+    return productsData.filter((p) => {
       const inCat = activeCat === "All" || p.cat === activeCat;
       const inQ =
         !q ||
