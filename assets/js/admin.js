@@ -41,6 +41,7 @@
   const cancelBtn = document.getElementById("btn-cancel");
   const newBtn = document.getElementById("btn-new");
   const urlInput = form.elements.url;
+  const refreshBtn = document.getElementById("btn-refresh");
 
   const money = (n) => "$" + Number(n || 0).toFixed(2).replace(/\.00$/, "");
   const esc = (s) =>
@@ -213,6 +214,21 @@
     setTimeout(() => updatePreview(), 50);
   });
 
+  // Refresh metadata for the current form URL without saving
+  async function refreshFormMetadata() {
+    const base = formData();
+    if (!base.url || base.url === "#") {
+      toast("No link to fetch");
+      return;
+    }
+    toast("Fetching metadata…");
+    const p = await importProductFromUrl(base);
+    fillForm(p);
+    updatePreview();
+    toast("Metadata updated — edit and save when ready");
+  }
+  if (refreshBtn) refreshBtn.addEventListener("click", refreshFormMetadata);
+
   /* ---------- list ---------- */
   function renderRows() {
     const q = listQuery.trim().toLowerCase();
@@ -235,6 +251,7 @@
         </div>
         <div class="row__actions">
           <button class="icon-btn" data-edit="${i}" title="Edit">✎</button>
+          <button class="icon-btn" data-refresh="${i}" title="Refresh metadata">🔁</button>
           <button class="icon-btn del" data-del="${i}" title="Delete">🗑</button>
         </div>
       </div>`;
@@ -245,6 +262,7 @@
   rowsEl.addEventListener("click", (e) => {
     const ed = e.target.closest("[data-edit]");
     const del = e.target.closest("[data-del]");
+    const rf = e.target.closest("[data-refresh]");
     if (ed) startEdit(+ed.dataset.edit);
     if (del) {
       const i = +del.dataset.del;
@@ -256,12 +274,32 @@
         toast("Deleted");
       }
     }
+    if (rf) {
+      const i = +rf.dataset.refresh;
+      refreshProduct(i);
+    }
   });
 
   document.getElementById("list-search").addEventListener("input", (e) => {
     listQuery = e.target.value;
     renderRows();
   });
+
+  // Refresh a single product's metadata (save immediately)
+  async function refreshProduct(i) {
+    if (!products[i]) return;
+    const p0 = products[i];
+    if (!p0.url || p0.url === "#") {
+      toast("No link for this product");
+      return;
+    }
+    toast(`Refreshing ${p0.name || 'product'}…`);
+    const updated = await importProductFromUrl(p0);
+    products[i] = { ...products[i], ...updated };
+    persist();
+    renderRows();
+    toast("Product refreshed");
+  }
 
   /* ---------- add / edit ---------- */
   function startEdit(i) {
