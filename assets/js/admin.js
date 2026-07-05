@@ -73,6 +73,24 @@
     }
     return "";
   };
+  const extractLinkImage = (html) => {
+    const m = html.match(/<link[^>]+rel=["'](?:image_src|preload|icon|apple-touch-icon)["'][^>]+href=["']([^"']+)["']/i);
+    return m ? decodeHtml(m[1].trim()) : "";
+  };
+  const extractJsonLdImage = (html) => {
+    const m = html.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi);
+    if (!m) return "";
+    for (const script of m) {
+      try {
+        const json = JSON.parse(script.replace(/<script[^>]*>|<\/script>/gi, ""));
+        const image = json.image || (json.product && json.product.image) || (json['@graph'] && json['@graph'].find((item) => item.image)?.image);
+        if (image) return Array.isArray(image) ? image[0] : image;
+      } catch (err) {
+        continue;
+      }
+    }
+    return "";
+  };
   const extractTitle = (html) => {
     const m = html.match(/<title[^>]*>([^<]+)<\/title>/i);
     return m ? decodeHtml(m[1].trim()) : "";
@@ -90,7 +108,7 @@
       if (!res.ok) throw new Error("fetch failed");
       const html = await res.text();
       const title = extractMeta(html, ["og:title", "twitter:title"]) || extractTitle(html);
-      let image = extractMeta(html, ["og:image", "twitter:image"]) || "";
+      let image = extractMeta(html, ["og:image", "twitter:image"]) || extractLinkImage(html) || extractJsonLdImage(html) || "";
       const blurb = extractMeta(html, ["description", "og:description", "twitter:description"]) || "";
       const price = extractPrice(html);
       const host = new URL(url).hostname.replace(/^www\./, "");
