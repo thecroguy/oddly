@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ODDLY: a search engine for gloriously strange products</title>
+<meta name="description" content="ODDLY is where people hunt for gloriously strange things to buy, and where weird-product shops get discovered. Search thousands of oddities from indie stores.">
+<meta property="og:title" content="ODDLY: gloriously strange things worth owning">
+<meta property="og:description" content="A search engine for weird, wonderful, giftable products from indie shops.">
+<meta name="theme-color" content="#FFF7EC">
+<link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="14" fill="%23FFF7EC" stroke="%2317140F" stroke-width="4"/%3E%3Ctext x="32" y="46" font-size="38" text-anchor="middle" font-family="Arial Black,sans-serif" fill="%2317140F"%3EO%3C/text%3E%3Ccircle cx="47" cy="18" r="6" fill="%23FF5436" stroke="%2317140F" stroke-width="3"/%3E%3C/svg%3E'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<!-- ===== Nav ===== -->
+<header class="nav" id="nav">
+  <div class="wrap nav__in">
+    <a class="logo" href="#top">oddly<span class="dot">.</span><span class="star">✦</span></a>
+    <nav class="nav__links">
+      <a href="#feed-top">Discover</a>
+      <a href="#merchants">For merchants</a>
+      <a href="#submit">Submit a find</a>
+    </nav>
+    <a class="btn btn--brand btn--sm nav__cta" href="#merchants">List your product</a>
+    <button class="nav__burger" id="burger" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="pill tagchip">✦ 20 gloriously strange things &amp; counting</span>
+      <h1>A search engine for <span class="mark">gloriously strange</span> products.</h1>
+      <p class="sub">The internet's weirdest, most giftable finds, pulled together from indie shops so you don't have to dig for them.</p>
+
+      <form class="searchbar" onsubmit="return false">
+        <label class="searchbar__field">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input id="search" type="search" placeholder="Search weird… e.g. goat, moon lamp, socks" autocomplete="off">
+        </label>
+        <button class="btn btn--grape" type="button" data-surprise>🎲 Surprise me</button>
+      </form>
+      <p class="hero__meta">No account needed · New oddities added weekly</p>
+    </div>
+  </section>
+
+  <!-- ===== Controls ===== -->
+  <div class="controls" id="feed-top">
+    <div class="wrap controls__in">
+      <div class="chips" id="chips"><!-- JS --></div>
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+
+  <!-- ===== Feed ===== -->
+  <section class="wrap">
+    <div class="feed" id="feed"><!-- JS renders product cards --></div>
+    <div class="empty" id="empty">
+      <div class="big">🧐</div>
+      <h3>Nothing weird enough… yet</h3>
+      <p>Try another search, or hit “Surprise me”.</p>
+    </div>
+  </section>
+
+  <!-- ===== For merchants (paid listings) ===== -->
+  <section class="section merchants" id="merchants">
+    <div class="wrap">
+      <div class="section__head">
+        <span class="pill">For weird-product shops</span>
+        <h2>Sell something strange? Get discovered.</h2>
+        <p>Thousands of people come to ODDLY specifically hunting for the unusual. Put your product in front of them. No ad-auction guesswork, just a flat listing fee.</p>
+      </div>
+
+      <div class="tiers">
+        <div class="tier">
+          <div class="tier__name">Free listing</div>
+          <div class="tier__price">$0</div>
+          <span class="pill tier__tag">Start here</span>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>1 product in the search feed</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Standard ranking</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Link back to your store</li>
+          </ul>
+          <a class="btn" href="#submit">Submit free</a>
+        </div>
+
+        <div class="tier is-featured">
+          <div class="tier__name">Featured</div>
+          <div class="tier__price">$19<span>/mo</span></div>
+          <span class="pill tier__tag" style="background:var(--gold)">★ Most popular</span>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Gold “Sponsored” badge</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Ranks above free listings</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Up to 5 products</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Click analytics</li>
+          </ul>
+          <a class="btn btn--brand" href="#submit">Get featured</a>
+        </div>
+
+        <div class="tier">
+          <div class="tier__name">Spotlight</div>
+          <div class="tier__price">$49<span>/mo</span></div>
+          <span class="pill tier__tag" style="background:var(--sky)">Max reach</span>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Everything in Featured</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Homepage hero rotation</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Weekly newsletter feature</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>Unlimited products</li>
+          </ul>
+          <a class="btn btn--grape" href="#submit">Go spotlight</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Submit ===== -->
+  <section class="section" id="submit">
+    <div class="wrap">
+      <div class="submit__box">
+        <h2>Found something gloriously weird?</h2>
+        <p>Submit a product (yours or one you love). If it's strange enough, it goes in the feed.</p>
+        <form data-form>
+          <div class="field-row">
+            <input type="url" placeholder="Link to the product…" required>
+          </div>
+          <div class="field-row">
+            <input type="email" placeholder="Your email" required>
+            <button class="btn btn--brand" type="submit">Send it in</button>
+          </div>
+          <p class="submit__note">We read every submission. Weird bar is high.</p>
+          <p class="submit__ok">Got it. If it's strange enough, you'll see it in the feed. 🎉</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot__grid">
+      <div class="foot__brand">
+        <a class="logo" href="#top">oddly<span class="dot" style="color:var(--brand)">.</span><span class="star">✦</span></a>
+        <p>A search engine for gloriously strange things worth owning. Hand-curated oddities from indie shops around the web.</p>
+      </div>
+      <div class="foot__cols">
+        <div class="foot__col">
+          <h4>Explore</h4>
+          <a href="#feed-top">Discover</a>
+          <a href="#top">Surprise me</a>
+          <a href="#submit">Submit a find</a>
+        </div>
+        <div class="foot__col">
+          <h4>Merchants</h4>
+          <a href="#merchants">List your product</a>
+          <a href="#merchants">Pricing</a>
+          <a href="#submit">Get featured</a>
+        </div>
+        <div class="foot__col">
+          <h4>ODDLY</h4>
+          <a href="#top">About</a>
+          <a href="#top">Contact</a>
+          <a href="#top">Newsletter</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclosure">
+      Heads up: ODDLY earns money through paid listings and affiliate links. We may get a commission when you buy through our links. It never costs you extra.
+    </div>
+
+    <div class="foot__bottom">
+      <span>© <span id="year">2026</span> ODDLY. Stay strange.</span>
+      <span>Made for the gloriously curious.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== In-site product detail ===== -->
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="modal__scrim" data-close></div>
+  <div class="modal__card" id="modal-content" role="dialog" aria-modal="true"><!-- JS --></div>
+</div>
+
+<script src="assets/js/products.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

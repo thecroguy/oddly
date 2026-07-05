@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ODDLY: Admin</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href='data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"%3E%3Crect width="64" height="64" rx="14" fill="%23FFF7EC" stroke="%2317140F" stroke-width="4"/%3E%3Ctext x="32" y="46" font-size="38" text-anchor="middle" font-family="Arial Black,sans-serif" fill="%2317140F"%3EO%3C/text%3E%3Ccircle cx="47" cy="18" r="6" fill="%23FF5436" stroke="%2317140F" stroke-width="3"/%3E%3C/svg%3E'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body class="admin">
+
+<!-- ===== Top bar ===== -->
+<header class="adbar">
+  <div class="adbar__in">
+    <a class="logo" href="index.html">oddly<span class="dot">.</span><span class="star">✦</span> <span class="adbar__tag">admin</span></a>
+    <div class="adbar__stats" id="stats"></div>
+    <div class="adbar__actions">
+      <a class="btn btn--sm" href="index.html" target="_blank">View site ↗</a>
+      <button class="btn btn--sm" id="btn-copy">Copy JS</button>
+      <button class="btn btn--sm btn--gold" id="btn-export">⬇ Export products.js</button>
+    </div>
+  </div>
+</header>
+
+<main class="adwrap">
+
+  <!-- ===== Editor ===== -->
+  <section class="editor" id="editor">
+    <div class="editor__head">
+      <h2 id="editor-title">Add a product</h2>
+      <button class="btn btn--sm" id="btn-new" hidden>＋ New</button>
+    </div>
+
+    <form id="form" class="ed-form" autocomplete="off">
+      <label class="fld">
+        <span>Name <b>*</b></span>
+        <input name="name" required placeholder="USB Pet Rock">
+      </label>
+
+      <label class="fld">
+        <span>Blurb (the quirky one-liner)</span>
+        <input name="blurb" placeholder="Does nothing. Emotionally available.">
+      </label>
+
+      <div class="fld-grid">
+        <label class="fld">
+          <span>Price ($)</span>
+          <input name="price" type="number" min="0" step="0.01" placeholder="14">
+        </label>
+        <label class="fld">
+          <span>Category</span>
+          <select name="cat" id="cat-select"></select>
+        </label>
+      </div>
+
+      <div class="fld-grid">
+        <label class="fld">
+          <span>Emoji (placeholder image)</span>
+          <input name="emoji" maxlength="4" placeholder="🪨">
+        </label>
+        <label class="fld">
+          <span>Store / merchant</span>
+          <input name="store" placeholder="DeskVoid">
+        </label>
+      </div>
+
+      <label class="fld">
+        <span>Image URL <em>(optional, overrides emoji)</em></span>
+        <input name="image" type="url" placeholder="https://…/photo.jpg">
+      </label>
+
+      <label class="fld">
+        <span>Outbound link <em>(add your affiliate tag here)</em></span>
+        <input name="url" type="url" placeholder="https://store.com/product?aff=YOURTAG">
+      </label>
+
+      <div class="fld">
+        <span>Accent colour</span>
+        <div class="swatches" id="swatches"></div>
+      </div>
+
+      <label class="toggle">
+        <input type="checkbox" name="sponsored">
+        <span class="toggle__ui"></span>
+        <span>★ Sponsored: paying merchant (ranks first, gold badge)</span>
+      </label>
+
+      <div class="ed-actions">
+        <button class="btn btn--brand" type="submit" id="btn-save">Add product</button>
+        <button class="btn" type="button" id="btn-cancel" hidden>Cancel</button>
+      </div>
+    </form>
+
+    <div class="preview">
+      <div class="preview__label">Live preview</div>
+      <div id="preview-card"></div>
+    </div>
+  </section>
+
+  <!-- ===== Product list ===== -->
+  <section class="list">
+    <div class="list__head">
+      <h2>All products</h2>
+      <input id="list-search" class="list__search" type="search" placeholder="Filter…">
+    </div>
+    <div class="rows" id="rows"></div>
+    <p class="publish-note">
+      <strong>To publish:</strong> your edits save in this browser automatically.
+      Hit <b>Export products.js</b>, drop the file into <code>assets/js/</code>, and push.
+      That's what your live visitors see.
+    </p>
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/js/products.js"></script>
+<script src="assets/js/admin.js"></script>
+</body>
+</html>
