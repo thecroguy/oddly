@@ -253,6 +253,7 @@
     fillForm(products[i]);
     titleEl.textContent = "Edit product";
     saveBtn.textContent = "Save changes";
+    saveBtn.setAttribute("aria-label", "Save changes to this product");
     cancelBtn.hidden = false;
     newBtn.hidden = false;
     updatePreview();
@@ -265,6 +266,7 @@
     renderSwatches();
     titleEl.textContent = "Add a product";
     saveBtn.textContent = "Add product";
+    saveBtn.removeAttribute("aria-label");
     cancelBtn.hidden = true;
     newBtn.hidden = true;
     updatePreview();
