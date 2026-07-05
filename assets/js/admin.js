@@ -43,8 +43,11 @@
 
   const money = (n) => "$" + Number(n || 0).toFixed(2).replace(/\.00$/, "");
   const esc = (s) =>
-    String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const tint = (hex) => {
+    String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));  const cleanUrl = (value) => {
+    const v = String(value || "").trim();
+    if (!v) return "";
+    return /^https?:\/\//i.test(v) ? v : `https://${v}`;
+  };  const tint = (hex) => {
     const h = hex.replace("#", "");
     return `rgba(${parseInt(h.slice(0, 2), 16)},${parseInt(h.slice(2, 4), 16)},${parseInt(h.slice(4, 6), 16)},0.14)`;
   };
@@ -88,7 +91,7 @@
       emoji: (f.get("emoji") || "").trim() || "🎁",
       c: chosenColor,
       store: (f.get("store") || "").trim(),
-      url: (f.get("url") || "").trim() || "#",
+      url: cleanUrl(f.get("url")) || "#",
       sponsored: f.get("sponsored") === "on",
     };
     const img = (f.get("image") || "").trim();
@@ -104,7 +107,7 @@
     form.emoji.value = p.emoji || "";
     form.store.value = p.store || "";
     form.image.value = p.image || "";
-    form.url.value = p.url && p.url !== "#" ? p.url : "";
+    form.url.value = p.url && p.url !== "#" ? cleanUrl(p.url) : "";
     form.sponsored.checked = !!p.sponsored;
     chosenColor = p.c || COLORS[0];
     renderSwatches();
