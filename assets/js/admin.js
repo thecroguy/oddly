@@ -40,6 +40,7 @@
   const saveBtn = document.getElementById("btn-save");
   const cancelBtn = document.getElementById("btn-cancel");
   const newBtn = document.getElementById("btn-new");
+  const urlInput = form.elements.url;
 
   const money = (n) => "$" + Number(n || 0).toFixed(2).replace(/\.00$/, "");
   const esc = (s) =>
@@ -196,6 +197,9 @@
     previewEl.innerHTML = previewCard(formData());
   }
   form.addEventListener("input", updatePreview);
+  urlInput.addEventListener("paste", () => {
+    setTimeout(() => updatePreview(), 50);
+  });
 
   /* ---------- list ---------- */
   function renderRows() {
