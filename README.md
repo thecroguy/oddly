@@ -43,12 +43,24 @@ Open **`admin.html`** in your browser for a click-in editor:
 
 - Add / edit / delete products with a form + **live preview**
 - Toggle **Sponsored** (paying merchants), pick accent colours, set emoji or image
-- Your work **auto-saves in the browser** (localStorage) as you go
-- Hit **⬇ Export products.js** (or **Copy JS**) → drop the downloaded file into
-  `assets/js/products.js` and push. That's the "publish" step. It's what live
-  visitors see. (localStorage is just your private workspace.)
+- Paste a store link and hit **Refresh metadata** to pull the name/image/price/store
+  automatically (works even when the fetch proxy returns "reader" text instead of
+  raw HTML — the image is picked out of the markdown either way)
+- If a product photo won't load (a store blocking hotlinking, a dead link), the
+  card falls back to the emoji instead of showing a blank tile
+- No good image to link to? **Upload a photo** — it's resized in your browser and
+  stored directly with the product, no image hosting required
+- Your work **auto-saves in the browser** (localStorage) as you go — this is why
+  the admin panel needs no backend or database, it's a free static site
+- To publish: either hit **🚀 Publish** (connect a repo once under **⚙ GitHub**,
+  using a personal access token) to push `products.js` straight to GitHub, or hit
+  **⬇ Export products.js** (or **Copy JS**) and push the file yourself. Either way,
+  that's what live visitors see — localStorage is just your private workspace.
 
-Bookmark `admin.html`; it's marked `noindex` so search engines ignore it.
+Bookmark `admin.html`; it's marked `noindex` so search engines ignore it. The
+GitHub token is stored only in your own browser's localStorage — use a
+fine-grained token scoped to just this repo, and don't set it up on a shared
+computer.
 
 ## How clicking works
 

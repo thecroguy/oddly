@@ -23,6 +23,8 @@
       <a class="btn btn--sm" href="index.html" target="_blank">View site ↗</a>
       <button class="btn btn--sm" id="btn-copy">Copy JS</button>
       <button class="btn btn--sm btn--gold" id="btn-export">⬇ Export products.js</button>
+      <button class="btn btn--sm" id="btn-gh-settings" type="button" title="Connect a GitHub repo">⚙ GitHub</button>
+      <button class="btn btn--sm btn--brand" id="btn-publish" type="button">🚀 Publish</button>
     </div>
   </div>
 </header>
@@ -69,9 +71,24 @@
         </label>
       </div>
 
-      <label class="fld">
+      <label class="fld" id="image-url-field">
         <span>Image URL <em>(optional, overrides emoji)</em></span>
-        <input name="image" type="url" placeholder="https://…/photo.jpg">
+        <input name="image" type="url" id="image-url-input" placeholder="https://…/photo.jpg">
+      </label>
+
+      <div class="fld" id="photo-attached" hidden>
+        <span>Photo</span>
+        <div class="fld-row photo-attached__row">
+          <img id="photo-thumb" alt="" class="photo-attached__thumb">
+          <span class="photo-attached__label">Custom photo attached</span>
+          <button type="button" class="btn btn--sm" id="btn-remove-photo">Remove</button>
+        </div>
+      </div>
+
+      <label class="fld">
+        <span>Or upload a photo <em>(from your camera roll — resized automatically)</em></span>
+        <input type="file" accept="image/*" id="photo-input">
+        <div class="fld__hint">Handy when a store blocks hotlinking or you'd rather use your own photo. It's resized in your browser and saved with the product — no image hosting needed.</div>
       </label>
 
       <label class="fld">
@@ -115,14 +132,59 @@
     <div class="rows" id="rows"></div>
     <p class="publish-note">
       <strong>To publish:</strong> your edits save in this browser automatically.
-      Hit <b>Export products.js</b>, drop the file into <code>assets/js/</code>, and push.
-      That's what your live visitors see.
+      Either hit <b>🚀 Publish</b> (after connecting a repo under <b>⚙ GitHub</b>) to push
+      straight to GitHub, or hit <b>Export products.js</b>, drop the file into
+      <code>assets/js/</code>, and push it yourself. Either way, that's what your live
+      visitors see — localStorage here is just your private workspace.
     </p>
   </section>
 
 </main>
 
 <div class="toast" id="toast"></div>
+
+<!-- ===== GitHub publish settings ===== -->
+<div class="modal" id="gh-modal" aria-hidden="true">
+  <div class="modal__scrim" data-gh-close></div>
+  <div class="gh-modal__card" role="dialog" aria-modal="true" aria-labelledby="gh-modal-title">
+    <button type="button" class="modal__close" data-gh-close aria-label="Close">✕</button>
+    <h2 id="gh-modal-title">GitHub publishing</h2>
+    <p class="fld__hint">
+      Publish writes <code>products.js</code> straight to your repo via the GitHub API —
+      no manual export/copy/push. Your token is stored only in <b>this browser's</b> local
+      storage, so use a fine-grained personal access token scoped to just this repo's
+      contents (not a broad admin token), and skip this on a shared computer.
+    </p>
+    <form id="gh-form" class="ed-form">
+      <label class="fld">
+        <span>Repo owner</span>
+        <input name="owner" placeholder="yourusername" autocomplete="off" autocapitalize="off" spellcheck="false">
+      </label>
+      <label class="fld">
+        <span>Repo name</span>
+        <input name="repo" placeholder="oddly" autocomplete="off" autocapitalize="off" spellcheck="false">
+      </label>
+      <div class="fld-grid">
+        <label class="fld">
+          <span>Branch</span>
+          <input name="branch" placeholder="main" autocomplete="off" autocapitalize="off" spellcheck="false">
+        </label>
+        <label class="fld">
+          <span>File path</span>
+          <input name="path" placeholder="assets/js/products.js" autocomplete="off" autocapitalize="off" spellcheck="false">
+        </label>
+      </div>
+      <label class="fld">
+        <span>Personal access token <em>(repo contents: read &amp; write)</em></span>
+        <input name="token" type="password" placeholder="github_pat_…" autocomplete="off" spellcheck="false">
+      </label>
+      <div class="ed-actions">
+        <button class="btn btn--brand" type="submit">Save settings</button>
+        <button class="btn" type="button" id="btn-gh-forget">Forget token</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <script src="assets/js/products.js"></script>
 <script src="assets/js/admin.js"></script>

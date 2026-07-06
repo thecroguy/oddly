@@ -48,9 +48,25 @@
   }
 
   /* ---------- card ---------- */
+  // If a product image fails to load (dead link, hotlink-blocked host,
+  // CORS…), swap it for the emoji rather than leaving a blank tile.
+  function attachImageFallback(container) {
+    container.querySelectorAll("img[data-fallback]").forEach((img) => {
+      img.addEventListener(
+        "error",
+        () => {
+          const span = document.createElement("span");
+          span.textContent = img.dataset.fallback || "🎁";
+          img.replaceWith(span);
+        },
+        { once: true }
+      );
+    });
+  }
+
   function cardHTML(p, i) {
     const media = p.image
-      ? `<img src="${p.image}" alt="${p.name}" loading="lazy">`
+      ? `<img src="${p.image}" alt="${p.name}" loading="lazy" data-fallback="${p.emoji}">`
       : p.emoji;
     const badge = p.sponsored
       ? `<span class="card__badge">★ Sponsored</span>`
@@ -75,6 +91,7 @@
     countEl.textContent =
       list.length + (list.length === 1 ? " strange thing" : " strange things");
     emptyEl.classList.toggle("show", list.length === 0);
+    attachImageFallback(feed);
   }
 
   /* ---------- chips ---------- */
@@ -105,7 +122,7 @@
   const mBody = document.getElementById("modal-content");
   function openProduct(p) {
     const media = p.image
-      ? `<img src="${p.image}" alt="${p.name}">`
+      ? `<img src="${p.image}" alt="${p.name}" data-fallback="${p.emoji}">`
       : p.emoji;
     mBody.innerHTML = `
       <button class="modal__close" data-close aria-label="Close">✕</button>
@@ -126,6 +143,7 @@
           <p class="modal__note">You'll be taken to ${p.store}. We may earn a commission.</p>
         </div>
       </div>`;
+    attachImageFallback(mBody);
     modal.classList.add("open");
     document.body.style.overflow = "hidden";
   }

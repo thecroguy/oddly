@@ -28,6 +28,7 @@
 
 .ed-form{display:grid;gap:14px}
 .fld{display:grid;gap:6px}
+.fld[hidden]{display:none} /* .fld's own display:grid otherwise beats the UA [hidden] rule */
 .fld > span{font-weight:700;font-size:.82rem}
 .fld > span b{color:var(--brand)}
 .fld > span em{font-weight:500;color:var(--muted);font-style:normal;font-size:.76rem}
@@ -95,3 +96,16 @@
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
 .empty-list{text-align:center;color:var(--muted);padding:40px 10px;font-weight:600}
+
+/* photo upload */
+.photo-attached__row{align-items:center}
+.photo-attached__thumb{width:44px;height:44px;object-fit:cover;border:2px solid var(--ink);border-radius:8px;flex:none}
+.photo-attached__label{flex:1;font-size:.86rem;font-weight:600}
+
+/* GitHub publish settings modal (reuses .modal/.modal__scrim/.modal__close from styles.css) */
+.gh-modal__card{
+  position:relative;z-index:1;width:100%;max-width:480px;max-height:90vh;overflow:auto;
+  background:var(--bg);border:3px solid var(--ink);border-radius:22px;box-shadow:10px 10px 0 var(--ink);
+  padding:26px;display:grid;gap:14px;
+}
+.gh-modal__card h2{font-family:var(--font-display);font-weight:800;font-size:1.3rem}
